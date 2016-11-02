@@ -20,12 +20,13 @@ K = A1*w1*sqrt(T^2*w1^2+1);
 
 %%Task 2a
 load('data_wave'); 
-x = psi_w(2,:);
+x = psi_w(2,:)*pi/180;
 window = 4096;
 noverlap = [];
-nttf = []; 
+nttf = [];  
 fs = 10;
 
+% Power Spectral Density (PSD) function
 [pxx,f] = pwelch(x, window, noverlap, nttf , fs); 
 
 %Scaling to s/rad & rad/s
@@ -33,3 +34,18 @@ pxx = pxx/(2*pi);
 f = f*2*pi;
 
 plot(f, pxx);
+hold on
+
+%%Task 2c
+xmax = find(max(pxx) == pxx);
+w_0 = f(xmax);
+
+%%Task 2d
+lambda = 0.080; 
+sigma = sqrt(max(pxx)); 
+K_w = 2*lambda*w_0*sigma;
+w = linspace(0,2,2000);
+P_w = (K_w^2.*w.^2)./(w.^4+(4*lambda^2-2).*w.^2*w_0^2+w_0^4);
+plot(w, P_w,'r');
+legend('Estimated ', 'Fitted ');
+%axis([0 2 0 ]);
