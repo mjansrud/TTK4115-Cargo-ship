@@ -1,6 +1,6 @@
 %%Task 1b
 clear all;
-clc;
+clc; 
 
 load('data_w1_smooth');
 load('data_w2_smooth');
@@ -18,7 +18,7 @@ A2 = (w2_max-w2_min)/2;
 T = sqrt((A1^2*w1^2 - A2^2*w2^2)/(A2^2*w2^4 - A1^2*w1^4));
 K = A1*w1*sqrt(T^2*w1^2+1);
 
-%%Task 2a
+%%Task 2a 
 load('data_wave'); 
 x = psi_w(2,:)*pi/180;
 window = 4096;
@@ -34,6 +34,10 @@ pxx = pxx/(2*pi);
 f = f*2*pi;
 
 plot(f, pxx);
+legend ('\fontsize{12} Estimated PSD');
+xlabel('\fontsize{12} Frequency (rad/s)');
+ylabel('\fontsize{12} Power (s/rad)');
+title('\fontsize{12} Power Spectral Density');
 hold on
 
 %%Task 2c
@@ -46,6 +50,17 @@ sigma = sqrt(max(pxx));
 K_w = 2*lambda*w_0*sigma;
 w = linspace(0,2,2000);
 P_w = (K_w^2.*w.^2)./(w.^4+(4*lambda^2-2).*w.^2*w_0^2+w_0^4);
-plot(w, P_w,'r');
-legend('Estimated ', 'Fitted ');
-%axis([0 2 0 ]);
+%plot(w, P_w,'r');
+%legend('Estimated PSD ', 'Fitted PSD');
+ 
+%%Task 3a
+s=tf('s');
+Kpd=0.7612;
+Td=T;
+Tf=8.5;
+Hpd=Kpd*(1+Td*s)/(1+Tf*s);
+Hs=K/(Td*s^2+s);
+H=Hpd*Hs;
+%margin(H);
+%legend('Transfer function');
+%grid on;
