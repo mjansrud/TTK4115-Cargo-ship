@@ -86,7 +86,6 @@ E = [0 0; K_w 0; 0 0; 0 0; 0 1];
 Ts= 0.1;
 [~,B_d] = c2d(A,B,Ts);
 [A_d, E_d] = c2d(A,E,Ts);
-C_d = C;
 
 %%Task 5b - Noise
 load('data_measurement_noise.mat');
@@ -96,10 +95,6 @@ R = m_var/Ts;
 %%Task 5c - Kalman part 1
 Q = [30 0; 0 10^(-6)];
 P_0 = [1 0 0 0 0; 0 0.013 0 0 0; 0 0 pi^2 0 0; 0 0 0 1 0; 0 0 0 0 2.5*10^(-4)];
-x_0 = zeros(35,1);
+x_0 = zeros(35,1)
 
-data = struct('A',A_d,'B',B_d,'C',C_d,'E',E_d,'Q',Q,'R',R,'P',P_0,'x_0',x_0);
-t=0
-u=0
-x=0
-DiscKal(t,x,u,flag,data)
+data = struct(x_0)
