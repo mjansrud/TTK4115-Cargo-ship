@@ -70,8 +70,25 @@ function sys=mdlUpdate(t,x,u,data)%mdlUpdate(t,x,u, data); if method 2 is used
 % example: sys=x+u(1), means that the state vector after
 % the update equals the previous state vector + input nr one.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I = eye(5);
 
-sys=[];
+P_pri = reshape(x(11:35),5,5);
+
+K_k = P_pri*(data.C_d)'*(data.C_d*P_pri*(data.C_d)'+data.R)^(-1);
+
+x_pri = x(1:5);
+
+x_post = x_pri + K_k*(u(2)-data.C_d*x_pri);
+
+P_k = (I-K_k*data.C_d)*P_pri*(I-K_k*data.C_d)'+K_k*data.R*(K_k)';
+
+x_nextPri = data.A_d*x_post + data.B_d*u(1);
+
+P_nextPri = data.A_d*P_k*(data.A_d)'+data.E_d*data.Q*(data.E_d)';
+
+out = [x_nextPri; x_post; P_nextPri(:)];
+
+sys=out;
 
 function sys=mdlOutputs(t,x,u,data)% mdlOutputs(t,x,u,data) if mathod 2 is used
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,7 +97,7 @@ function sys=mdlOutputs(t,x,u,data)% mdlOutputs(t,x,u,data) if mathod 2 is used
 % the second input. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-sys=[2 2];
+sys=[x(8); x(10)];
 
 function sys=mdlTerminate(t,x,u) 
 sys = [];
